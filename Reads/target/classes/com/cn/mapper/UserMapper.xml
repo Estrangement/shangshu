@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.UserMapper">
+ 	<sql id="my">
+       <if test="uid!=null and uid!=''">
+   		  and  uid=#{uid}
+   		</if>
+   		<if test="uname!=null and uname!=''">
+   		  and  uname=#{uname}
+   		</if>
+        <if test="username!=null and username!=''">
+   		  and  username=#{username}
+   		</if>
+   		<if test="pwd!=null and pwd!=''">
+   		  and  pwd=#{pwd}
+   		</if>
+   		<if test="age!=null and age!=''">
+   		  and  age=#{age}
+   		</if>
+   		<if test="tel!=null and tel!=''">
+   		  and  tel=#{tel}
+   		</if>
+   		<if test="sex!=null and sex!=''">
+   		  and  sex=#{sex}
+   		</if>
+   		<if test="email!=null and email!=''">
+   		  and  email=#{email}
+   		</if>
+   		<if test="address!=null and address!=''">
+   		  and  address=#{address}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+        <if test="b.uid!=null and b.uid!=''">
+   		  and  u.uid LIKE concat(concat('%',#{b.uid}),'%')
+   		</if>
+   		<if test="b.uname!=null and b.uname!=''">
+   		  and  u.uname LIKE concat(concat('%',#{b.uname}),'%')
+   		</if>
+        <if test="b.username!=null and b.username!=''">
+   		  and  u.username LIKE concat(concat('%',#{b.username}),'%')
+   		</if>
+   		<if test="b.pwd!=null and b.pwd!=''">
+   		  and  u.pwd LIKE concat(concat('%',#{b.pwd}),'%')
+   		</if>
+   		<if test="b.age!=null and b.age!=''">
+   		  and  u.age LIKE concat(concat('%',#{b.age}),'%')
+   		</if>
+   		<if test="b.tel!=null and b.tel!=''">
+   		  and  u.tel LIKE concat(concat('%',#{b.tel}),'%')
+   		</if>
+   		<if test="b.sex!=null and b.sex!=''">
+   		  and  u.sex LIKE concat(concat('%',#{b.sex}),'%')
+   		</if>
+   		<if test="b.email!=null and b.email!=''">
+   		  and  u.email LIKE concat(concat('%',#{b.email}),'%')
+   		</if>
+   		<if test="b.address!=null and b.address!=''">
+   		  and  u.address LIKE concat(concat('%',#{b.address}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.User">
+		insert into tb_user values(#{uid},#{uname},#{username},#{pwd},#{age},#{tel},#{sex},#{email},#{address},#{state})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_user where uid=#{uid}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.User">
+			update tb_user 
+   	<set>
+   		<if test="uname!=null and uname!=''">
+   		   uname=#{uname},
+   		</if>
+   		<if test="username!=null and username!=''">
+   		   username=#{username},
+   		</if>
+   		<if test="pwd!=null and pwd!=''">
+   		   pwd=#{pwd},
+   		</if><if test="age!=null and age!=''">
+   		   age=#{age},
+   		</if>
+   		<if test="tel!=null and tel!=''">
+   		  tel=#{tel},
+   		</if>
+   		<if test="sex!=null and sex!=''">
+   		    sex=#{sex},
+   		</if>
+   		<if test="email!=null and email!=''">
+   		   email=#{email},
+   		</if>
+   		<if test="address!=null and address!=''">
+   		    address=#{address},
+   		</if>
+   	</set>
+   	where uid=#{uid}
+	</update>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.User">
+		select * from tb_user where 1=1
+		 <include refid="my"></include>
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Relation" parameterType="java.util.Map">
+		 SELECT *,GROUP_CONCAT(r.rname) AS quanxian FROM tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid   
+
+		<!-- select * from tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid -->
+		 <include refid="my2"></include>
+   		GROUP BY u.uid 
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		  SELECT count(DISTINCT(u.uid) )FROM tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid   
+		 <include refid="my2"></include>
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.User">
+       select * from tb_user where uid in
+       <foreach collection="array" item="uid" open="(" close=")" separator=",">
+         #{uid}
+       </foreach>       
+   </select>
+	
+	<delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_user where uid in
+       <foreach collection="array" item="uid" open="(" close=")" separator=",">
+         #{uid}
+       </foreach>       
+   </delete>
+	
+	
+	<select id="findUsersRoleMenuMap" resultType="com.cn.vo.UserRoleMenuVo" parameterType="java.util.Map">
+		SELECT u.uid,u.uname,ur.rid,rm.mid,m.`name`,m.type,m.percode,m.parent_id,m.url from 
+		tb_user u,tb_user_role ur,tb_role_menu rm,tb_menu m
+		where u.uid=ur.uid AND ur.rid=rm.rid and rm.mid=m.id   
+		 <if test="username!=null and username!=''">
+   		  and  u.username=#{username}
+   		</if>
+		<if test="falg==1">
+		  and  m.parent_id is null
+		</if>
+		<if test="falg==2">
+		  and m.parent_id  is NOT null and m.type='menu'
+		</if>
+		<if test="falg==3">
+		  and m.parent_id  is NOT null and m.type='button'
+		</if>
+	</select>
+</mapper>

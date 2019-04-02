@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* track base Css */
+
+#ehong-code-input{
+	width:42px;
+	letter-spacing:2px;
+	margin:0px 8px 0px 0px;
+}
+.ehong-idcode-val{
+	letter-spacing:4px;
+	font-size:22px;
+	font-weight:bold;
+	border: 0px solid red;
+	margin-left: 255px;
+	margin-top: -36px;
+}
+
+.ehong-code-val-tip{
+	font-size:20px;
+	color:#1098EC;
+	top:0px;
+	*top:-3px;	
+	position:relative;	
+	margin:0px 0px 0px 4px;
+	cursor:pointer;	
+}

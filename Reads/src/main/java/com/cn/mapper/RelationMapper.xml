@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.RelationMapper">
+ 	<sql id="my">
+       <if test="urid!=null and urid!=''">
+   		  and  urid=#{urid}
+   		</if>
+        <if test="uid!=null and uid!=''">
+   		  and  uid=#{uid}
+   		</if>
+   		<if test="rid!=null and rid=''">
+   		  and  rid=#{rid}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+       <if test="b.urid!=null and b.urid!=''">
+   		  and  urid LIKE concat(concat('%',#{b.urid}),'%')
+   		</if>
+        <if test="b.uid!=null and b.uid!=''">
+   		  and  uid LIKE concat(concat('%',#{b.uid}),'%')
+   		</if>
+   		<if test="b.rid!=null and b.rid!=''">
+   		  and  rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Relation">
+		insert into tb_user_role values(#{urid},#{uid},#{rid})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_user_role where urid=#{urid}
+	</delete>
+	<delete id="deletea" parameterType="String">
+		delete from tb_user_role where uid=#{uid}
+	</delete>
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.Relation">
+			update tb_user_role set rid=#{rid} where uid=#{uid}
+	</update>
+	<select id="zuolian"  resultType="com.cn.entity.Relation">
+      SELECT * from tb_role b LEFT JOIN tb_user_role ur on b.rid=ur.rid and  ur.uid=#{uid} 
+   </select>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Relation">
+		select * from tb_user_role where 1=1
+		 <if test="urid!=null and urid!=''">
+   		  and  urid=#{urid}
+   		</if>
+        <if test="uid!=null and uid!=''">
+   		  and  uid=#{uid}
+   		</if>
+   		<if test="rid!=null and rid=''">
+   		  and  rid=#{rid}
+   		</if>
+	</select>
+	
+	<delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_user_role where urid in
+       <foreach collection="array" item="urid" open="(" close=")" separator=",">
+         #{urid}
+       </foreach>       
+   </delete>
+   <delete id="batchdeletea" parameterType="java.sql.Array">
+        delete from tb_user_role where uid in
+       <foreach collection="array" item="uid" open="(" close=")" separator=",">
+         #{uid}
+       </foreach>       
+   </delete>
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Relation" parameterType="java.util.Map">
+		select * from tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid
+		 <if test="b.urid!=null and b.urid!=''">
+   		  and  urid LIKE concat(concat('%',#{b.urid}),'%')
+   		</if>
+        <if test="b.uid!=null and b.uid!=''">
+   		  and  ur.uid LIKE concat(concat('%',#{b.uid}),'%')
+   		</if>
+   		<if test="b.rid!=null and b.rid!=''">
+   		  and  ur.rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1)from tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid
+		 <if test="b.urid!=null and b.urid!=''">
+   		  and  ur.urid LIKE concat(concat('%',#{b.urid}),'%')
+   		</if>
+        <if test="b.uid!=null and b.uid!=''">
+   		  and  ur.uid LIKE concat(concat('%',#{b.uid}),'%')
+   		</if>
+   		<if test="b.rid!=null and b.rid!=''">
+   		  and  ur.rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Relation">
+       select * from tb_role r,tb_user u,tb_user_role ur where ur.rid=r.rid and ur.uid =u.uid and u.uid in
+       <foreach collection="array" item="uid" open="(" close=")" separator=",">
+         #{uid}
+       </foreach>      
+   </select>
+	
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.Role_menuMapper">
+ 	<sql id="my">
+       <if test="rmid!=null and rmid!=''">
+   		  and  rmid=#{rmid}
+   		</if>
+        <if test="rid!=null and rid!=''">
+   		  and  rid=#{rid}
+   		</if>
+   		<if test="mid!=null and mid=''">
+   		  and  mid=#{mid}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+       <if test="b.rmid!=null and b.rmid!=''">
+   		  and  rmid LIKE concat(concat('%',#{b.rmid}),'%')
+   		</if>
+        <if test="b.rid!=null and b.rid!=''">
+   		  and  rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+   		<if test="b.mid!=null and b.mid!=''">
+   		  and  mid LIKE concat(concat('%',#{b.mid}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Role_menu">
+		insert into tb_role_menu values(#{rmid},#{rid},#{mid})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_role_menu where rid=#{id}
+	</delete>
+	
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Role_menu">
+		select * from tb_role_menu where 1=1
+		 <if test="rmid!=null and rmid!=''">
+   		  and  rmid=#{rmid}
+   		</if>
+        <if test="rid!=null and rid!=''">
+   		  and  rid=#{rid}
+   		</if>
+   		<if test="mid!=null and mid=''">
+   		  and  mid=#{mid}
+   		</if>
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Role_menu" parameterType="java.util.Map">
+		select * from tb_role r,tb_menu m,tb_role_menu rm where rm.rid=r.rid and rm.mid=m.id
+		 <if test="b.rmid!=null and b.rmid!=''">
+   		  and  rm.rmid LIKE concat(concat('%',#{b.rmid}),'%')
+   		</if>
+   		<if test="b.rname!=null and b.rname!=''">
+   		  and  r.rname LIKE concat(concat('%',#{b.rname}),'%')
+   		</if>
+        <if test="b.rid!=null and b.rid!=''">
+   		  and  rm.rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+   		<if test="b.mid!=null and b.mid!=''">
+   		  and  rm.mid LIKE concat(concat('%',#{b.mid}),'%')
+   		</if>
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+				select count(1) from tb_role r,tb_menu m,tb_role_menu rm where rm.rid=r.rid and rm.mid=m.id
+
+		 <if test="b.rmid!=null and b.rmid!=''">
+   		  and  rm.rmid LIKE concat(concat('%',#{b.rmid}),'%')
+   		</if>
+        <if test="b.rid!=null and b.rid!=''">
+   		  and  rm.rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+   		<if test="b.mid!=null and b.mid!=''">
+   		  and  rm.mid LIKE concat(concat('%',#{b.mid}),'%')
+   		</if>
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Role_menu">
+       select * from tb_role_menu where rmid in
+       <foreach collection="array" item="rmid" open="(" close=")" separator=",">
+         #{rmid}
+       </foreach>       
+   </select>
+	
+	<select id="zuolian"  resultType="com.cn.entity.Role_menu">
+      SELECT * FROM tb_menu m LEFT JOIN tb_role_menu rm on m.id=rm.mid and rm.rid=#{rid} 
+   </select>
+   
+	<delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_role_menu where rmid in
+       <foreach collection="array" item="rmid" open="(" close=")" separator=",">
+         #{rmid}
+       </foreach>       
+   </delete>
+</mapper>

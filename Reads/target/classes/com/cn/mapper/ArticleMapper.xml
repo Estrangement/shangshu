@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.ArticleMapper">
+ 	<sql id="my">
+       <if test="aid!=null and aid!=''">
+   		  and  aid=#{aid}
+   		</if>
+        <if test="title!=null and title!=''">
+   		  and  title=#{title}
+   		</if>
+   		<if test="time!=null and time!=''">
+   		  and  time=#{time}
+   		</if>
+   		<if test="source!=null and source!=''">
+   		  and  source=#{source}
+   		</if>
+   		<if test="brief!=null and brief!=''">
+   		  and  brief=#{brief}
+   		</if>
+   		<if test="content!=null and content!=''">
+   		  and  content=#{content}
+   		</if>
+   		<if test="photo!=null and photo!=''">
+   		  and  photo=#{photo}
+   		</if>
+   		<if test="type!=null and type!=''">
+   		  and  type=#{type}
+   		</if>
+   		<if test="state!=null and state!=''">
+   		  and  state=#{state}
+   		</if>
+   		<if test="sname!=null and sname!=''">
+   		  and  sname=#{sname}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+       <if test="b.aid!=null and b.aid!=''">
+   		  and  aid LIKE concat(concat('%',#{b.aid}),'%')
+   		</if>
+        <if test="b.title!=null and b.title!=''">
+   		  and  title LIKE concat(concat('%',#{b.title}),'%')
+   		</if>
+   		<if test="b.time!=null and b.time!=''">
+   		  and  time LIKE concat(concat('%',#{b.time}),'%')
+   		</if>
+   		
+   		<if test="b.source!=null and b.source!=''">
+   		  and  source LIKE concat(concat('%',#{b.source}),'%')
+   		</if>
+   		<if test="b.brief!=null and b.brief!=''">
+   		  and  brief LIKE concat(concat('%',#{b.brief}),'%')
+   		</if>
+   		<if test="b.content!=null and b.content!=''">
+   		  and  content LIKE concat(concat('%',#{b.content}),'%')
+   		</if>
+   		<if test="b.photo!=null and b.photo!=''">
+   		  and  photo LIKE concat(concat('%',#{b.photo}),'%')
+   		</if>
+   		<if test="b.type!=null and b.type!=''">
+   		  and  type LIKE concat(concat('%',#{b.type}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Article">
+		insert into tb_article values(#{aid},#{title},#{time},#{source},#{brief},#{content},#{photo},#{type},#{state},#{sname},#{volume})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_article where aid=#{aid}
+	</delete>
+	
+	
+	<update id="upstate" parameterType="com.cn.entity.Article">
+			update tb_article set state=#{state},sname=#{sname} where aid=#{aid}
+	</update>
+	<update id="upvolume" parameterType="com.cn.entity.Article">
+			update tb_article set volume=#{volume} where aid=#{aid}
+	</update>
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.Article">
+			update tb_article 
+   	<set>
+   		 <if test="title!=null and title!=''">
+   		  title=#{title},
+   		</if>
+   		<if test="time!=null and time!=''">
+   		  time=#{time},
+   		</if>
+   		<if test="source!=null and source!=''">
+   		  source=#{source},
+   		</if>
+   		<if test="brief!=null and brief!=''">
+   		  brief=#{brief},
+   		</if>
+   		<if test="content!=null and content!=''">
+   		  content=#{content},
+   		</if>
+   		<if test="photo!=null and photo!=''">
+   		  photo=#{photo},
+   		</if>
+   		<if test="type!=null and type!=''">
+   		  type=#{type},
+   		</if>
+   		<if test="state!=null and state!=''">
+   		  state=#{state},
+   		</if>
+   		<if test="sname!=null and sname!=''">
+   		  sname=#{sname},
+   		</if>
+   	</set>
+   	where aid=#{aid}
+	</update>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Article">
+		select * from tb_article  where 1=1 and state=1
+		 <include refid="my"></include>
+		 ORDER BY time desc
+	</select>
+	
+	<select id="suijia" resultType="com.cn.entity.Article">
+		select aid,title from tb_article where state=1  ORDER BY RAND() LIMIT 6 ;
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Article" parameterType="java.util.Map">
+		select * from tb_article where 1=1 
+		 <include refid="my2"></include>
+		 ORDER BY time desc
+		 limit #{page},#{row}  
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from tb_article where 1=1  
+		 <include refid="my2"></include>
+		 ORDER BY time desc
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Article">
+       select * from tb_article where aid in
+       <foreach collection="array" item="aid" open="(" close=")" separator=",">
+         #{aid}
+       </foreach>       
+   </select>
+	 <delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_article where aid in
+       <foreach collection="array" item="aid" open="(" close=")" separator=",">
+         #{aid}
+       </foreach>       
+   </delete>
+   
+   <update id="batchupdate" parameterType="java.sql.Array">
+       update tb_article set state=#{state} where aid in
+       <foreach collection="array" item="aid" open="(" close=")" separator=",">
+         #{aid}
+       </foreach>       
+   </update>
+</mapper>

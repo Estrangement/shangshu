@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.BookMapper">
+ 	<sql id="my">
+       <if test="bid!=null and bid!=''">
+   		  and  bid=#{bid}
+   		</if>
+        <if test="bname!=null and bname!=''">
+   		  and  bname=#{bname}
+   		</if>
+   		<if test="title!=null and title!=''">
+   		  and  title=#{title}
+   		</if>
+   		<if test="author!=null and author!=''">
+   		  and  author=#{author}
+   		</if>
+   		<if test="price!=null and price!=''">
+   		  and  price=#{price}
+   		</if>
+   		<if test="code!=null and code!=''">
+   		  and  code=#{code}
+   		</if>
+   		<if test="press!=null and press!=''">
+   		  and  press=#{press}
+   		</if>
+   		<if test="time!=null and time!=''">
+   		  and  time=#{time}
+   		</if>
+   		<if test="type!=null and type!=''">
+   		  and  type=#{type}
+   		</if>
+   		
+   		<if test="content!=null and content!=''">
+   		  and  content=#{content}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+       <if test="b.bid!=null and b.bid!=''">
+   		  and  bid LIKE concat(concat('%',#{b.bid}),'%')
+   		</if>
+        <if test="b.bname!=null and b.bname!=''">
+   		  and  bname LIKE concat(concat('%',#{b.bname}),'%')
+   		</if>
+   		<if test="b.title!=null and b.title!=''">
+   		  and  title LIKE concat(concat('%',#{b.title}),'%')
+   		</if>
+   		<if test="b.author!=null and b.author!=''">
+   		  and  author LIKE concat(concat('%',#{b.author}),'%')
+   		</if>
+   		<if test="b.price!=null and b.price!=''">
+   		  and  price LIKE concat(concat('%',#{b.price}),'%')
+   		</if>
+   		<if test="b.code!=null and b.code!=''">
+   		  and  code LIKE concat(concat('%',#{b.code}),'%')
+   		</if>
+   		<if test="b.press!=null and b.press!=''">
+   		  and  press LIKE concat(concat('%',#{b.press}),'%')
+   		</if>
+   		<if test="b.time!=null and b.time!=''">
+   		  and  time LIKE concat(concat('%',#{b.time}),'%')
+   		</if>
+   		<if test="b.type!=null and b.type!=''">
+   		  and  type LIKE concat(concat('%',#{b.type}),'%')
+   		</if>
+   		<if test="b.content!=null and b.content!=''">
+   		  and  content LIKE concat(concat('%',#{b.content}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Book">
+		insert into tb_book values(#{bid},#{bname},#{title},#{author},#{price},#{code},#{press},#{time},#{type},#{content},#{state},#{url})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_book where bid=#{bid}
+	</delete>
+	<update id="upstate" parameterType="com.cn.entity.Book">
+			update tb_book set state=#{state} where bid=#{bid}
+	</update>
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.Book">
+			update tb_book 
+   	<set>
+   		
+        <if test="bname!=null and bname!=''">
+   		  bname=#{bname},
+   		</if>
+   		<if test="author!=null and author!=''">
+   		   author=#{author},
+   		</if>
+   		<if test="price!=null and price!=''">
+   		  price=#{price},
+   		</if>
+   		<if test="code!=null and code!=''">
+   		  code=#{code},
+   		</if>
+   		<if test="press!=null and press!=''">
+   		  press=#{press},
+   		</if>
+   		<if test="time!=null and time!=''">
+   		   time=#{time},
+   		</if>
+   		<if test="type!=null and type!=''">
+   		  type=#{type},
+   		</if>
+   	</set>
+   	where bid=#{bid}
+	</update>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Book">
+		select * from tb_book  where 1=1 and state=1
+		 <include refid="my"></include>
+		 ORDER BY time desc
+	</select>
+	
+	<select id="suijia" resultType="com.cn.entity.Book">
+		select * from tb_book where state=1  ORDER BY RAND() LIMIT 6;
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Book" parameterType="java.util.Map">
+		select * from tb_book where 1=1
+		 <include refid="my2"></include>
+		 ORDER BY time desc
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from tb_book where 1=1
+		 <include refid="my2"></include>
+		 ORDER BY time desc
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Book">
+       select * from tb_book where bid in
+       <foreach collection="array" item="bid" open="(" close=")" separator=",">
+         #{bid}
+       </foreach>       
+   </select>
+   <delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_book where bid in
+       <foreach collection="array" item="bid" open="(" close=")" separator=",">
+         #{bid}
+       </foreach>       
+   </delete>
+   
+   <update id="batchupdate" parameterType="java.sql.Array">
+       update tb_book set state=#{state} where bid in
+       <foreach collection="array" item="bid" open="(" close=")" separator=",">
+         #{bid}
+       </foreach>       
+   </update>
+	
+</mapper>

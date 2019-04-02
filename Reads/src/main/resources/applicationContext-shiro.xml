@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	    <!-- 必须设置 -->
+	    <property name="securityManager" ref="securityManager" />
+		<!-- 如果没有认证将要跳转的登陆地址，http可访问的url，如果不在表单认证过虑器FormAuthenticationFilter中指定此地址就为身份认证地址 -->
+		<property name="loginUrl" value="/front/login.jsp" />
+		<!-- 配置登录成功后返回的页面 -->
+		<property name="successUrl" value="forward:/article/selindex" />
+		<!-- 未授权时要跳转的连接 -->  
+	       <property name="unauthorizedUrl" value="redirect:/error.jsp" />
+	    <!-- shiro连接约束配置 -->
+	    <property name="filterChainDefinitions">
+	        <value>
+	            <!-- 对静态资源设置匿名访问 -->
+	            /resources/** = anon
+	            /front/login.jsp = anon
+	            /static/**=anon
+	            /css/**=anon
+	            /js/**=anon
+	            /attached/**=anon
+	            /img/**=anon
+	            /kindeditor/**=anon
+	            /lib/**=anon
+	            /temp/**=anon
+	            /assets/**=anon
+	            /assetslogin/**=anon
+	            /user/login=anon
+	            <!-- /** = authc 所有url都必须认证通过才可以访问-->
+	            <!-- /** = authc -->
+	        </value>
+	    </property>
+	</bean>
+	
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	    <property name="realm" ref="usersRealm" />
+	</bean>
+	
+	<!-- 自定义 realm -->
+	<bean id="usersRealm" class="com.cn.shiro.UsersRealm"></bean>
+	
+	<!-- 生命周期就是初始化 与 销毁的管理-->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>

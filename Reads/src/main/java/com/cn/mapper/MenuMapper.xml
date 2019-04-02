@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.MenuMapper">
+ 	<sql id="my">
+       <if test="id!=null and id!=''">
+   		  and  id=#{id}
+   		</if>
+        <if test="name!=null and name!=''">
+   		  and  name=#{name}
+   		</if>
+   		<if test="url!=null and url!=''">
+   		  and  url=#{url}
+   		</if>
+   		<if test="type!=null and type!=''">
+   		  and  type=#{type}
+   		</if>
+   		<if test="percode!=null and percode!=''">
+   		  and  percode=#{percode}
+   		</if>
+   		<if test="parent_id!=null and parent_id!=''">
+   		  and  parent_id=#{parent_id}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+       <if test="b.id!=null and b.id!=''">
+   		  and  id LIKE concat(concat('%',#{b.id}),'%')
+   		</if>
+        <if test="b.name!=null and b.name!=''">
+   		  and  name LIKE concat(concat('%',#{b.name}),'%')
+   		</if>
+   		<if test="b.url!=null and b.url!=''">
+   		  and  url LIKE concat(concat('%',#{b.url}),'%')
+   		</if>
+   		<if test="b.type!=null and b.type!=''">
+   		  and  type LIKE concat(concat('%',#{b.type}),'%')
+   		</if>
+   		<if test="b. percode!=null and b. percode!=''">
+   		  and  percode LIKE concat(concat('%',#{b.percode}),'%')
+   		</if>
+   		<if test="b.parent_id!=null and b.parent_id!=''">
+   		  and  parent_id LIKE concat(concat('%',#{b.parent_id}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Menu">
+		insert into tb_menu values(#{id},#{name},#{url},#{type},#{percode},#{parent_id})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_menu where id=#{id}
+	</delete>
+	
+	<delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_menu where id in
+       <foreach collection="array" item="id" open="(" close=")" separator=",">
+         #{id}
+       </foreach>       
+   </delete>
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.Menu">
+			update tb_menu 
+   	<set>
+   		
+   		<if test="name!=null and name!=''">
+   		   name=#{name},
+   		</if>
+   		<if test="url!=null and url!=''">
+   		   url=#{url},
+   		</if>
+   		<if test="type!=null and type!=''">
+   		   type=#{type},
+   		</if>
+   		<if test="percode!=null and percode!=''">
+   		   percode=#{percode},
+   		</if>
+   		<if test="parent_id!=null and parent_id!=''">
+   		   parent_id=#{parent_id},
+   		</if>
+   	</set>
+   	where id=#{id}
+	</update>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Menu">
+		select * from tb_menu  where 1=1
+		 <include refid="my"></include>
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Menu" parameterType="java.util.Map">
+		select * from tb_menu where 1=1
+		 <include refid="my2"></include>
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from tb_menu where 1=1
+		 <include refid="my2"></include>
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Menu">
+       select * from tb_menu where id in
+       <foreach collection="array" item="id" open="(" close=")" separator=",">
+         #{id}
+       </foreach>       
+   </select>
+	
+</mapper>

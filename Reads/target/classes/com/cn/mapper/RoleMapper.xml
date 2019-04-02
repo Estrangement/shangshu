@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.mapper.RoleMapper">
+ 	<sql id="my">
+   		<if test="rid!=null and rid=''">
+   		  and  rid=#{rid}
+   		</if>
+   		<if test="rname!=null and rname!=''">
+   		  and  rname=#{rname}
+   		</if>
+  	</sql>
+  	  <sql id="my2">
+   		<if test="b.rid!=null and b.rid!=''">
+   		  and  rid LIKE concat(concat('%',#{b.rid}),'%')
+   		</if>
+   		 <if test="b.rname!=null and b.rname!=''">
+   		  and  rname LIKE concat(concat('%',#{b.rname}),'%')
+   		</if>
+   </sql>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="com.cn.entity.Role">
+		insert into tb_role values(#{rid},#{rname})
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="String">
+		delete from tb_role where rid=#{rid}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.cn.entity.Role">
+			update tb_role 
+   	<set>
+   		<if test="rname!=null and rname!=''">
+   		   rname=#{rname},
+   		</if>
+   	</set>
+   	where rid=#{rid}
+	</update>
+	<!-- 查询列表 -->
+	<select id="findAll" resultType="com.cn.entity.Role">
+		select * from tb_role where 1=1
+	</select>
+	
+	<!-- 分页查询列表 -->
+	<select id="findAllByPage" resultType="com.cn.entity.Role" parameterType="java.util.Map">
+		select * from tb_role where 1=1
+		 <include refid="my2"></include>
+		 limit #{page},#{row}
+	</select>
+	
+	
+	<!-- 统计数量 -->
+	<select id="findAllCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from tb_role where 1=1
+		 <include refid="my2"></include>
+	</select>
+	<!-- 根据多个id查询列表 -->
+	 <select id="findByIds" parameterType="java.sql.Array" resultType="com.cn.entity.Role">
+       select * from tb_role where rid in
+       <foreach collection="array" item="rid" open="(" close=")" separator=",">
+         #{rid}
+       </foreach>       
+   </select>
+   <delete id="batchdelete" parameterType="java.sql.Array">
+        delete from tb_role where rid in
+       <foreach collection="array" item="rid" open="(" close=")" separator=",">
+         #{rid}
+       </foreach>       
+   </delete>
+	
+</mapper>
