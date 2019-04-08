@@ -23,7 +23,11 @@ import com.cn.entity.User;
 import com.cn.service.ArticleService;
 import com.cn.utils.GetTime;
 import com.cn.utils.PageUtils;
+import com.cn.utils.RemoveHTMLUtil;
 import com.cn.utils.UUIDUtil;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -73,6 +77,33 @@ public class ArticleController {
 		use.upvolume(ace);
 		request.setAttribute("bb", bb);
 		request.setAttribute("tuijian", tuijian);
+		
+        return "front/readinginfo";
+    }
+	@RequestMapping("/bofang")
+    public String bofang(HttpServletRequest request,String aid){ 
+		String[] bs={aid};
+		List<Article> listid = use.findByIds(bs);
+		Article bb=listid.get(0);
+		String contents=RemoveHTMLUtil.Html2Text(bb.getContent());
+		ActiveXComponent sap = new ActiveXComponent("Sapi.SpVoice");
+		try {
+			// 音量 0-100
+			sap.setProperty("Volume", new Variant(40));
+			// 语音朗读速度 -10 到 +10
+			sap.setProperty("Rate", new Variant(-2));
+			// 获取执行对象
+			Dispatch sapo = sap.getObject();
+			// 执行朗读
+			Dispatch.call(sapo, "Speak", new Variant(contents));
+			// 关闭执行对象
+			sapo.safeRelease();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭应用程序连接
+			sap.safeRelease();
+		}
 		
         return "front/readinginfo";
     }

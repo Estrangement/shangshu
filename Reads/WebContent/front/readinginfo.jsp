@@ -90,6 +90,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			margin-left: 220px;
 			margin-top: -20px;
 		}
+		.yuedu1{
+			position:absolute;
+			margin-left: 320px;
+			margin-top: -23px;
+		}
 	</style>
     
 </head>
@@ -144,6 +149,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <div class="div_act_title" id="divtitle"> ${bb.title }</div>
 <div class="div_act_author" id="divdateauthor"> ${bb.time }| ${bb.source } </div><span class="yuedu">阅读量：${bb.volume}</span>
+<%-- <span class="yuedu1"><a href="<%=basePath%>/article/bofang?aid=${bb.aid}">语音播放</a></span> --%>
+<span class="yuedu1">
+<div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
+<script>
+	window._bd_share_config=
+	{"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},
+			"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],
+				"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":
+					["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+</span>
 <div class="div_act_content" id="divcontent">
     <!-- &nbsp; --> ${bb.content }<!-- <img src="img/index/20190311100046_9489.png" style="margin-left :240px;"/> -->
 </div>
