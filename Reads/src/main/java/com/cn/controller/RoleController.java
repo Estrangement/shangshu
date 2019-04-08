@@ -49,6 +49,25 @@ public class RoleController {
 		request.setAttribute("b", aa);
         return "admin/Role/selRole";
 	}
+	@RequestMapping("/chajname")
+    public void chausername(HttpServletRequest request,HttpServletResponse response,String jname)throws IOException{ 
+		PrintWriter out = response.getWriter();
+		String json = "";
+		Role uu=new Role();
+		uu.setRname(jname);
+	    List<Role> libc=use.findAll(uu);
+		/*
+		 * for(Role aa:libc) { System.out.println(aa.getRname()); }
+		 */
+	    if (libc.size()>0) {
+			json = "{\"message\":true}";
+		} else {
+			json = "{\"message\":false}";
+		}
+		out.write(json);
+		out.flush();
+		out.close();
+    }
 	  @RequestMapping("/add")
 	    public void add(HttpServletRequest request,HttpServletResponse response,String[] ids,String jname) throws IOException{
 		  PrintWriter out = response.getWriter();

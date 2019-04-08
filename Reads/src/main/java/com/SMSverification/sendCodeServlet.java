@@ -45,7 +45,6 @@ import javax.servlet.http.HttpSession;
 	        try {
 	            if(!SMScode.sendCode(phoneNumber, buffer.toString())) {
 	            	System.out.println("验证码发送失败！");
-	            	
 	            } else {
 	                //将验证码、手机号码和当前的系统时间存储到session中
 	                req.getSession().setAttribute("code", buffer.toString());

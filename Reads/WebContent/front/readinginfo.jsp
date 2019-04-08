@@ -74,7 +74,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	           // alert(navH + "_" + scroH);
 	            if (scroH >= navH) {
 	                $("#divmenu").css({ "position": "fixed" });
-
 	            } else if (scroH < navH) {
 	                $("#divtop").css({ "display": "block" });
 	                $("#divmenu").css({ "position": "relative" });

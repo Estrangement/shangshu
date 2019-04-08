@@ -41,12 +41,6 @@
 	<classpathentry kind="lib" path="WebContent/kindeditor/jsp/lib/commons-fileupload-1.2.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/kindeditor/jsp/lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jacob.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-beanutils-1.7.0.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ezmorph-1.0.3.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/json-lib-2.1-jdk15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_161"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

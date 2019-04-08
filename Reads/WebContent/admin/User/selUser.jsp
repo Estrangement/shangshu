@@ -50,11 +50,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
      <shiro:hasPermission name="user:delete"> 
       <a href="javascript:;"  onclick="daochu()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe608;</i> 导出数据</a>
      </shiro:hasPermission> 
-     <shiro:hasPermission name="user:delete"> 
+     <%-- <shiro:hasPermission name="user:delete"> 
       <a href="javascript:;" onclick="admin_add('导入数据','admin/User/daoru.jsp','700','500')" class="btn btn-primary radius">
 	 <i class="Hui-iconfont">&#xe604;</i> 导入数据
 	 </a>
-     </shiro:hasPermission> 
+     </shiro:hasPermission>  --%>
     </span>
     <span class="r">
         <div id="d1">
